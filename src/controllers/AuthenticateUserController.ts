@@ -1,18 +1,18 @@
-import { Request, response, Response} from "express"
+import { Request, response, Response } from "express"
 import { AuthenticateUserService } from "../services/AuthenticateIserService"
 
 class AuthenticateUserController {
-    async handle(req: Request, res: Response) {
-        const { code } = req.body
+    async handle(request: Request, response: Response) {
+        const { code } = request.body
 
         const service = new AuthenticateUserService()
         try {
             const result = await service.execute(code)
             return response.json(result)
         } catch (err) {
-            return response.json({error: err.message})
+            return response.json({ error: err.message })
         }
     }
 }
 
-export {AuthenticateUserController}
+export { AuthenticateUserController }

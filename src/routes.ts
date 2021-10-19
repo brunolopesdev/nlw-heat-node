@@ -1,12 +1,23 @@
 import { Router } from "express";
 import { AuthenticateUserController } from "./controllers/AuthenticateUserController";
 import { CreateMessageController } from "./controllers/CreateMessageController";
-import { ensureAuthenticated } from "./middleware/ensureAuthenticated";
+import { GetLast3MessagesController } from "./controllers/GetLast3MessagesController";
+import { ProfileUserController } from "./controllers/ProfileUserController";
+import { ensureAuthentication } from "./middleware/ensureAuthenticate";
 
-const router = Router()
+const router = Router();
 
-router.post("/authenticate", new AuthenticateUserController().handle)
+router.post("/authenticate", new AuthenticateUserController().handle);
+router.post(
+  "/messages",
+  ensureAuthentication,
+  new CreateMessageController().handle
+);
+router.get("/messages/last3", new GetLast3MessagesController().handle);
+router.get(
+  "/profile",
+  ensureAuthentication,
+  new ProfileUserController().handle
+);
 
-router.post("/message", ensureAuthenticated, new CreateMessageController().handle)
-
-export { router }
+export { router };

@@ -1,15 +1,15 @@
-import {Request, Response, NextFunction} from "express"
+import { Request, Response, NextFunction } from "express"
 import { verify } from "jsonwebtoken"
 
 interface IPayload {
     sub: string
 }
 
-export function ensureAuthenticated(req: Request, res: Response, next: NextFunction) {
-    const authToken = req.headers.authorization
+export function ensureAuthenticated(request: Request, response: Response, next: NextFunction) {
+    const authToken = request.headers.authorization
 
-    if(!authToken){
-        return res.status(401).json({
+    if (!authToken) {
+        return response.status(401).json({
             errorCode: "token.invalid"
         })
     }
@@ -19,11 +19,11 @@ export function ensureAuthenticated(req: Request, res: Response, next: NextFunct
     try {
         const { sub } = verify(token, process.env.JWT_SECRET) as IPayload
 
-        req.user_id = sub
+        request.user_id = sub
 
         return next()
     } catch (err) {
-        return res.status(401).json({
+        return response.status(401).json({
             errorCode: "token.expired"
         })
     }
